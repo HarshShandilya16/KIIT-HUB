@@ -9,10 +9,13 @@ console.log("Chat connecting to socket server:", SOCKET_URL);
 
 // Initialize socket with proper options
 const socket = io(SOCKET_URL, {
+  path: '/socket.io',
   transports: ['polling'],          // Use only polling since WebSockets might be failing on Vercel
   reconnectionAttempts: 5,          // Try to reconnect 5 times
   reconnectionDelay: 1000,          // Start with 1 second delay between attempts
-  timeout: 20000                    // Wait 20 seconds before timing out
+  timeout: 20000,                   // Wait 20 seconds before timing out
+  forceNew: true,                   // Force a new connection
+  autoConnect: false                // Don't connect automatically - we'll do it manually
 });
 
 // Add socket event listeners
@@ -25,6 +28,8 @@ socket.on('connect_error', (error) => {
   // Add more diagnostic information
   console.log('Browser location:', window.location.href);
   console.log('Network status:', navigator.onLine ? 'online' : 'offline');
+  console.log('Socket transport:', socket.io.engine.transport.name);
+  console.log('Socket opts:', socket.io.opts);
 });
 
 socket.on('reconnect_attempt', (attemptNumber) => {
@@ -34,6 +39,9 @@ socket.on('reconnect_attempt', (attemptNumber) => {
 socket.on('reconnect_failed', () => {
   console.error('Socket.io failed to reconnect after multiple attempts');
 });
+
+// Attempt connection manually after setting up all listeners
+socket.connect();
 
 function App(props) {
   const [username, setUsername] = useState("");

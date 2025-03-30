@@ -10,7 +10,9 @@ console.log('Socket URL:', SOCKET_URL);
 
 // Helper function for making API calls with the correct URL
 export const apiCall = async (endpoint, options = {}) => {
-  const url = `${API_URL}${endpoint}`;
+  // Ensure endpoint starts with a / and remove any duplicate slashes
+  const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${API_URL}${cleanEndpoint}`;
   
   // Default options for fetch
   const defaultOptions = {

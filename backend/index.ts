@@ -45,6 +45,8 @@ const startServer = async () => {
 
     // Configure Socket.io
     const io = new Server(server, {
+      path: '/socket.io',
+      allowEIO3: true, // Add compatibility for older clients
       cors: {
         origin: [
           'http://localhost:3000',
@@ -66,7 +68,10 @@ const startServer = async () => {
         ],
         methods: ['GET', 'POST', 'OPTIONS'],
         credentials: true
-      }
+      },
+      transports: ['polling'], // Only use polling to avoid WebSocket issues
+      pingTimeout: 30000,
+      pingInterval: 25000
     });
 
     io.on("connection", (socket) => {
@@ -87,6 +92,16 @@ const startServer = async () => {
       // Handle disconnection
       socket.on('disconnect', () => {
         console.log(`Socket disconnected: ${socket.id}`);
+      });
+    });
+
+    // Add Socket.io health check route
+    app.get('/socket-health', (req, res) => {
+      res.status(200).json({
+        status: 'ok',
+        socketio: io ? 'initialized' : 'not initialized',
+        timestamp: new Date().toISOString(),
+        version: '1.0.1'
       });
     });
 
