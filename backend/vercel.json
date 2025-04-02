@@ -18,8 +18,10 @@
     }
   ],
   "rewrites": [
+    { "source": "/", "destination": "/api/index.js" },
     { "source": "/api/auth", "destination": "/api/auth.js" },
     { "source": "/api/profile", "destination": "/api/profile.js" },
+    { "source": "/api/test", "destination": "/api/test.js" },
     { "source": "/api/cors", "destination": "/api/cors.js" },
     { "source": "/api/(.*)", "destination": "/api/$1.js" }
   ]
