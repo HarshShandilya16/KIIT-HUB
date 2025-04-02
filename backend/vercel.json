@@ -14,8 +14,10 @@
       ]
     }
   ],
-  "routes": [
-    { "src": "/api/auth", "dest": "/api/auth.js" },
-    { "src": "/api/(.*)", "dest": "/api/$1.js" }
+  "rewrites": [
+    { "source": "/api/auth", "destination": "/api/auth.js" },
+    { "source": "/api/profile", "destination": "/api/profile.js" },
+    { "source": "/api/cors", "destination": "/api/cors.js" },
+    { "source": "/api/(.*)", "destination": "/api/$1.js" }
   ]
 }
