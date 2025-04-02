@@ -4,24 +4,25 @@ const User = require('../src/models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-module.exports = async (req, res) => {
+module.exports = (req, res) => {
+  // ===== IMPORTANT: CORS headers must be set before any other logic =====
   // Set CORS headers explicitly
   res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version');
 
-  // Handle preflight OPTIONS request
+  // Handle preflight OPTIONS request - MUST be first
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Handle login requests
+  // Now handle the actual auth logic
   if (req.method === 'POST') {
     try {
       const { email, password } = req.body;
       
-      // Simple demo authentication
+      // Simple demo authentication - no database connection for now
       if (email && password) {
         const token = jwt.sign(
           { id: 'user123', email: email },
@@ -35,7 +36,7 @@ module.exports = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: 'Login successful',
-          user: { id: 'user123', email: email, name: 'Demo User' }
+          user: { id: 'user123', email: email, name: 'Test User' }
         });
       }
       

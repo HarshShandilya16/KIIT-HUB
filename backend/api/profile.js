@@ -3,26 +3,19 @@ const connect = require('../src/config/database');
 const User = require('../src/models/User');
 const jwt = require('jsonwebtoken');
 
-module.exports = async (req, res) => {
-  // Set specific origin for CORS when using credentials
-  const origin = req.headers.origin;
-  const allowedOrigins = ['https://kiithub-frontend.vercel.app', 'http://localhost:3000'];
-  
-  // Only allow specific origins
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
+module.exports = (req, res) => {
+  // IMPORTANT: Set CORS headers first
+  res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version');
 
-  // Handle preflight requests
+  // Handle OPTIONS request - MUST be first
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // Handle GET requests to fetch user profile
+  // Handle GET request for profile
   if (req.method === 'GET') {
     try {
       // Get token from cookies
@@ -41,14 +34,13 @@ module.exports = async (req, res) => {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-jwt-secret');
       
-      // In a real app, you would fetch user data from your database
-      // Here we're returning mock data based on the token
+      // Return mock user data
       return res.status(200).json({
         success: true,
         user: {
           id: decoded.id,
           email: decoded.email,
-          name: 'Demo User',
+          name: 'Test User',
           college: 'KIIT University',
           items: []
         }
@@ -65,7 +57,7 @@ module.exports = async (req, res) => {
       
       return res.status(500).json({
         success: false,
-        message: 'Server error, please try again later'
+        message: 'Server error'
       });
     }
   }
