@@ -8,18 +8,19 @@
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         { "key": "Access-Control-Allow-Origin", "value": "https://kiithub-frontend.vercel.app" },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version" }
       ]
     }
   ],
   "rewrites": [
     { "source": "/", "destination": "/api/index.js" },
     { "source": "/api/auth", "destination": "/api/auth.js" },
+    { "source": "/api/test-auth", "destination": "/api/test-auth.js" },
     { "source": "/api/profile", "destination": "/api/profile.js" },
     { "source": "/api/test", "destination": "/api/test.js" },
     { "source": "/api/cors", "destination": "/api/cors.js" },

@@ -21,6 +21,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BecomePartner from "./pages/BecomePartner";
 import RefundPolicy from "./pages/RefundPolicy";
+import TestAuth from "./pages/TestAuth";
 
 import { AuthProvider } from "./Contexts/AuthContext";
 import { ThemeProvider } from "./Contexts/ThemeContext";
@@ -53,6 +54,7 @@ const ThemedApp = () => {
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/partners" element={<BecomePartner />} />
           <Route path="/refund" element={<RefundPolicy />} />
+          <Route path="/test-auth" element={<TestAuth />} />
         </Routes>
       </div>
       <Footer />
