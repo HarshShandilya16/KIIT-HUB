@@ -5,20 +5,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res) => {
-  // Set specific origin for CORS when using credentials
-  const origin = req.headers.origin;
-  const allowedOrigins = ['https://kiithub-frontend.vercel.app', 'http://localhost:3000'];
-  
-  // Only allow specific origins
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
+  // Set CORS headers explicitly
+  res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
 
-  // Handle preflight requests
+  // Handle preflight OPTIONS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -28,7 +21,7 @@ module.exports = async (req, res) => {
     try {
       const { email, password } = req.body;
       
-      // Simple demo authentication - replace with your actual authentication logic
+      // Simple demo authentication
       if (email && password) {
         const token = jwt.sign(
           { id: 'user123', email: email },
@@ -36,7 +29,7 @@ module.exports = async (req, res) => {
           { expiresIn: '1d' }
         );
         
-        // Set cookie with proper settings
+        // Set cookie with secure settings
         res.setHeader('Set-Cookie', `token=${token}; Path=/; HttpOnly; SameSite=None; Secure; Max-Age=${60*60*24}`);
         
         return res.status(200).json({
@@ -54,7 +47,7 @@ module.exports = async (req, res) => {
       console.error('Login error:', error);
       return res.status(500).json({
         success: false,
-        message: 'Server error, please try again later'
+        message: 'Server error'
       });
     }
   }

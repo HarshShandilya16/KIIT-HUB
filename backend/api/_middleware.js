@@ -1,21 +1,16 @@
-// CORS middleware for serverless functions
-module.exports = async (req, res) => {
-  // Set CORS headers for all requests
+// This file will run for all API routes to handle CORS
+module.exports = (req, res) => {
+  // Set CORS headers for all responses
   res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Cookie');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Content-Type');
   
-  // Handle OPTIONS method directly
+  // Handle OPTIONS preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return {
-      handled: true
-    };
+    return res.status(200).end();
   }
   
-  // Continue processing for non-OPTIONS requests
-  return {
-    handled: false
-  };
+  // For all other requests, continue processing
+  return undefined;
 }; 
