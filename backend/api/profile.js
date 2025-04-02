@@ -1,16 +1,14 @@
-// Serverless function for user profile
-const connect = require('../src/config/database');
-const User = require('../src/models/User');
+// Standalone profile endpoint with no external dependencies
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res) => {
-  // IMPORTANT: Set CORS headers first
+  // Set CORS headers - MUST be first
   res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Date, X-Api-Version');
 
-  // Handle OPTIONS request - MUST be first
+  // Handle OPTIONS request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
