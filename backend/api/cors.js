@@ -1,34 +1,28 @@
 // Simple CORS preflight handler
-export default function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', 'https://kiithub-frontend.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE, PATCH');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, Cookie');
+module.exports = (req, res) => {
+  // Set specific origin for CORS when using credentials
+  const origin = req.headers.origin;
+  const allowedOrigins = ['https://kiithub-frontend.vercel.app', 'http://localhost:3000'];
+  
+  // Only allow specific origins
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-  // Handle OPTIONS method
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization');
+
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return res.status(200).end();
   }
-  
-  // For GET requests, return CORS diagnostic information
-  if (req.method === 'GET') {
-    return res.status(200).json({
-      success: true,
-      message: 'CORS enabled endpoint',
-      cors: {
-        allowOrigin: 'https://kiithub-frontend.vercel.app',
-        allowMethods: 'GET, POST, OPTIONS, PUT, DELETE, PATCH',
-        allowCredentials: true
-      },
-      timestamp: new Date().toISOString()
-    });
-  }
-  
-  // Method not allowed
-  return res.status(405).json({ 
-    success: false, 
-    message: 'Method not allowed' 
+
+  // Simple response to confirm CORS is working
+  return res.status(200).json({
+    success: true,
+    message: 'CORS is working correctly',
+    origin: origin || 'No origin header',
+    timestamp: new Date().toISOString()
   });
-} 
+}; 
